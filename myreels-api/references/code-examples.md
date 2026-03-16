@@ -15,7 +15,7 @@ const client = new MyReelsSkills({
 
 // 提交任务并等待完成
 const result = await client.runTask({
-  slug: 'pr-376ebd94',
+  slug: 'nano-banana2',
   taskType: 'image',
   title: 'My first task',
   userInput: {
@@ -30,7 +30,7 @@ console.log(result.result?.artifacts);
 
 ```typescript
 const TOKEN = 'YOUR_ACCESS_TOKEN';
-const MODEL = 'pr-376ebd94'; // 在开发者中心查看模型 slug
+const MODEL = 'nano-banana2'; // 在开发者中心查看模型 modelName
 
 // 1. 提交任务
 const submitRes = await fetch(`https://api.myreels.ai/generation/build/${MODEL}`, {
@@ -68,7 +68,7 @@ console.log(result.artifacts);
 import requests, time
 
 TOKEN = "YOUR_ACCESS_TOKEN"
-MODEL = "pr-376ebd94"  # 在开发者中心查看模型 slug
+MODEL = "nano-banana2"  # 在开发者中心查看模型 modelName
 
 # 1. 提交任务
 resp = requests.post(

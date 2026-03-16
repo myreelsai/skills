@@ -2,11 +2,14 @@
 
 数据来源：`GET https://api.myreels.ai/api/v1/models/api`
 
+> API 路径中使用 `modelName`，不是 `slug`。例：`POST /generation/build/nano-banana-pro`
+
 ---
 
 ## 图像生成（t2i / i2i）
 
-### Nano Banana2 `pr-376ebd94`
+### Nano Banana2
+- modelName：`nano-banana2`
 - 标签：`t2i` `i2i`
 - 预估费用：$0.0872 / 次
 
@@ -19,7 +22,8 @@
 
 ---
 
-### Nano Banana Pro `pr-9264a6e0`
+### Nano Banana Pro
+- modelName：`nano-banana-pro`
 - 标签：`t2i` `i2i`
 - 预估费用：$0.1890 / 次
 
@@ -32,7 +36,8 @@
 
 ---
 
-### GPT Image 1.5 `pr-d2a95e26`
+### GPT Image 1.5
+- modelName：`gpt-image-1.5`
 - 标签：`t2i` `i2i`
 - 预估费用：$0.0420 / 次
 
@@ -45,7 +50,8 @@
 
 ---
 
-### Wan2.6 T2I `pr-d5d90151`
+### Wan2.6 T2I
+- modelName：`wan2.6-t2i`
 - 标签：`t2i`
 - 预估费用：$0.2100 / 次
 
@@ -60,7 +66,8 @@
 
 ---
 
-### Wan2.6 I2I `pr-37f1d61a`
+### Wan2.6 I2I
+- modelName：`wan2.6-image`
 - 标签：`i2i`
 - 预估费用：$0.2100 / 次
 
@@ -78,7 +85,8 @@
 
 ## 视频生成（t2v）
 
-### Wan2.6 T2V `pr-859b0de1`
+### Wan2.6 T2V
+- modelName：`wan2.6-t2v`
 - 标签：`t2v`
 - 预估费用：$3.1500 / 次
 
@@ -93,9 +101,16 @@
 
 ---
 
+### Google Veo 3.1
+- modelName：`veo3.1-pro`
+- 标签：`t2v`
+
+---
+
 ## 语音生成（t2a）
 
-### Qwen-TTS `pr-e834b522`
+### Qwen-TTS
+- modelName：`qwen3-tts-instruct-flash`
 - 标签：`t2a`
 - 预估费用：$0.0210 / 次
 
