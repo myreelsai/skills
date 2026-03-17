@@ -13,13 +13,10 @@ description: MyReels.ai 平台的外部开发者 API 集成指南。当用户需
 
 ## 认证
 
-token 放在请求 body 中（不是 Header）：
+使用请求头：
 
-```json
-{
-  "token": "YOUR_ACCESS_TOKEN",
-  "userInput": { ... }
-}
+```http
+Authorization: Bearer YOUR_ACCESS_TOKEN
 ```
 
 AccessToken 在开发者中心创建后仅展示一次，请妥善保存。
@@ -31,25 +28,24 @@ AccessToken 在开发者中心创建后仅展示一次，请妥善保存。
 ```
 POST https://api.myreels.ai/generation/build/:modelName
 Content-Type: application/json
+Authorization: Bearer YOUR_ACCESS_TOKEN
 ```
 
-`:modelName` 为模型的 slug，在开发者中心模型列表中查看（如 `pr-376ebd94`）。
+`:modelName` 为模型的 `modelName`，不是 slug，例如 `nano-banana2`、`veo3.1-pro`。
 
 请求体：
 ```json
 {
-  "token": "YOUR_ACCESS_TOKEN",
-  "userInput": {
-    "prompt": "A cinematic portrait with soft studio lighting"
-  }
+  "prompt": "A cinematic portrait with soft studio lighting"
 }
 ```
 
 响应：
 ```json
 {
-  "code": 0,
-  "status": "queued",
+  "code": 200,
+  "status": "ok",
+  "message": "Successfully created task",
   "data": { "taskID": "task_xxx" }
 }
 ```
@@ -57,29 +53,25 @@ Content-Type: application/json
 ### 2. 查询任务状态
 
 ```
-POST https://api.myreels.ai/generation/task/:taskID
-Content-Type: application/json
-```
-
-请求体：
-```json
-{ "token": "YOUR_ACCESS_TOKEN" }
+GET https://api.myreels.ai/generation/task/:taskID
+Authorization: Bearer YOUR_ACCESS_TOKEN
 ```
 
 响应（完成时）：
 ```json
 {
-  "code": 0,
+  "code": 200,
   "status": "ok",
+  "message": "Successfully obtained task info",
   "data": {
     "status": "completed",
     "progress": 100,
-    "artifacts": ["https://cdn.example.com/result.png"]
+    "resultUrls": [{ "url": "https://cdn.example.com/result.png" }]
   }
 }
 ```
 
-任务状态流转：`queued` → `processing` → `completed` / `failed`
+任务状态流转：`pending` → `processing` → `completed` / `failed`
 
 限流：60次/分钟，超出返回 429。
 
@@ -91,7 +83,7 @@ Content-Type: application/json
 | 视频 | t2v | 文生视频 |
 | 语音 | t2a | 文本转语音 |
 
-具体模型 slug、输入参数、费用见 [references/models.md](references/models.md)
+具体模型 `modelName`、输入参数、费用见 [references/models.md](references/models.md)
 
 ## 代码示例
 
