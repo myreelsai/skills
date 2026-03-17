@@ -26,19 +26,21 @@
 
 ## 业务错误
 
-当前应以响应体 `code` 字段为准：
+当前应按以下顺序判断：
 
-- `code === 200`：成功
-- `code !== 200`：异常
+- 先看 HTTP Status，非 `2xx` 视为接口异常
+- HTTP Status 为 `2xx` 时，再看响应体 `status`
+- `status === "ok"`：接口成功
+- `status === "failed"`：接口失败
 
 ```json
-{ "code": 401, "status": "failed", "message": "Missing required header: Authorization" }
+{ "status": "failed", "message": "Missing required header: Authorization" }
 ```
 
 ## 错误处理示例
 
 ```typescript
-const res = await fetch(`https://api.myreels.ai/generation/build/${modelName}`, {
+const res = await fetch(`https://api.myreels.ai/generation/${modelName}`, {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json',
@@ -48,10 +50,10 @@ const res = await fetch(`https://api.myreels.ai/generation/build/${modelName}`, 
 });
 
 const data = await res.json();
-if (data.code === 401) throw new Error('Invalid AccessToken');
-if (data.code === 402) throw new Error('Insufficient points');
-if (data.code === 403) throw new Error('Subscription or permission required');
-if (data.code !== 200) throw new Error(data.message || 'Task submission failed');
+if (res.status === 401) throw new Error('Invalid AccessToken');
+if (res.status === 402) throw new Error('Insufficient points');
+if (res.status === 403) throw new Error('Subscription or permission required');
+if (!res.ok || data.status !== 'ok') throw new Error(data.message || 'Task submission failed');
 ```
 
 ## 限流说明
@@ -59,3 +61,17 @@ if (data.code !== 200) throw new Error(data.message || 'Task submission failed')
 - 查询接口限制：60次/分钟
 - 推荐轮询间隔：3-5 秒
 - 超出限制后按 429 退避重试
+
+## 路径限制
+
+对外公开入口仅包括：
+
+- `POST /generation/:modelName`
+- `GET /query/task/:taskID`
+- `GET|POST /api/v1/*`
+
+其他路径会返回：
+
+```json
+{ "status": "failed", "message": "Path not allowed" }
+```

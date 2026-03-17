@@ -26,7 +26,7 @@ AccessToken 在开发者中心创建后仅展示一次，请妥善保存。
 ### 1. 提交任务
 
 ```
-POST https://api.myreels.ai/generation/build/:modelName
+POST https://api.myreels.ai/generation/:modelName
 Content-Type: application/json
 Authorization: Bearer YOUR_ACCESS_TOKEN
 ```
@@ -43,7 +43,6 @@ Authorization: Bearer YOUR_ACCESS_TOKEN
 响应：
 ```json
 {
-  "code": 200,
   "status": "ok",
   "message": "Successfully created task",
   "data": { "taskID": "task_xxx" }
@@ -53,14 +52,13 @@ Authorization: Bearer YOUR_ACCESS_TOKEN
 ### 2. 查询任务状态
 
 ```
-GET https://api.myreels.ai/generation/task/:taskID
+GET https://api.myreels.ai/query/task/:taskID
 Authorization: Bearer YOUR_ACCESS_TOKEN
 ```
 
 响应（完成时）：
 ```json
 {
-  "code": 200,
   "status": "ok",
   "message": "Successfully obtained task info",
   "data": {
@@ -74,6 +72,16 @@ Authorization: Bearer YOUR_ACCESS_TOKEN
 任务状态流转：`pending` → `processing` → `completed` / `failed`
 
 限流：60次/分钟，超出返回 429。
+
+## 返回规则
+
+- 先看 HTTP Status，非 `2xx` 视为接口失败
+- HTTP Status 为 `2xx` 时，再看响应体中的 `status`
+- 查询任务时，`status = ok` 后再看 `data.status`
+- 当前公开入口仅包括：
+  - `POST /generation/:modelName`
+  - `GET /query/task/:taskID`
+  - `GET|POST /api/v1/*`
 
 ## 模型分类
 

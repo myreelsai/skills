@@ -33,7 +33,7 @@ const TOKEN = 'YOUR_ACCESS_TOKEN';
 const MODEL = 'nano-banana2'; // 在开发者中心查看模型 modelName
 
 // 1. 提交任务
-const submitRes = await fetch(`https://api.myreels.ai/generation/build/${MODEL}`, {
+const submitRes = await fetch(`https://api.myreels.ai/generation/${MODEL}`, {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json',
@@ -48,15 +48,18 @@ const { data: { taskID } } = await submitRes.json();
 // 2. 轮询任务状态（建议间隔 3-5 秒）
 async function pollTask(taskID: string) {
   while (true) {
-    const res = await fetch(`https://api.myreels.ai/generation/task/${taskID}`, {
+    const res = await fetch(`https://api.myreels.ai/query/task/${taskID}`, {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${TOKEN}`,
       },
     });
     const payload = await res.json();
-    if (payload.code !== 200) {
-      throw new Error(payload.message || `Query failed: ${payload.code}`);
+    if (!res.ok) {
+      throw new Error(payload.message || `Query failed: HTTP ${res.status}`);
+    }
+    if (payload.status !== 'ok') {
+      throw new Error(payload.message || 'Query failed');
     }
     const { data } = payload;
     if (data.status === 'completed') return data;
@@ -79,7 +82,7 @@ MODEL = "nano-banana2"  # 在开发者中心查看模型 modelName
 
 # 1. 提交任务
 resp = requests.post(
-    f"https://api.myreels.ai/generation/build/{MODEL}",
+    f"https://api.myreels.ai/generation/{MODEL}",
     headers={"Authorization": f"Bearer {TOKEN}"},
     json={"prompt": "A cinematic portrait"},
 )
@@ -88,12 +91,14 @@ task_id = resp.json()["data"]["taskID"]
 # 2. 轮询任务状态
 while True:
     r = requests.get(
-        f"https://api.myreels.ai/generation/task/{task_id}",
+        f"https://api.myreels.ai/query/task/{task_id}",
         headers={"Authorization": f"Bearer {TOKEN}"},
     )
     payload = r.json()
-    if payload.get("code") != 200:
-        raise Exception(payload.get("message") or f"Query failed: {payload.get('code')}")
+    if not r.ok:
+        raise Exception(payload.get("message") or f"Query failed: HTTP {r.status_code}")
+    if payload.get("status") != "ok":
+        raise Exception(payload.get("message") or "Query failed")
     data = payload.get("data", {})
     if data.get("status") == "completed":
         print(data["resultUrls"])
@@ -107,13 +112,13 @@ while True:
 
 ```bash
 # 1. 提交任务
-curl -X POST "https://api.myreels.ai/generation/build/nano-banana2" \
+curl -X POST "https://api.myreels.ai/generation/nano-banana2" \
   -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{"prompt": "A cinematic portrait"}'
 
 # 2. 查询任务状态
-curl -X GET "https://api.myreels.ai/generation/task/TASK_ID" \
+curl -X GET "https://api.myreels.ai/query/task/TASK_ID" \
   -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
 ```
 

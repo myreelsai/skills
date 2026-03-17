@@ -2,7 +2,7 @@
 
 数据来源：`GET https://api.myreels.ai/api/v1/models/api`
 
-> API 路径中使用 `modelName`，不是 `slug`。例：`POST /generation/build/nano-banana-pro`
+> API 路径中使用 `modelName`，不是 `slug`。例：`POST /generation/nano-banana-pro`
 
 ---
 
