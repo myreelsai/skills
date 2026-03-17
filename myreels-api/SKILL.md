@@ -11,6 +11,16 @@ description: MyReels.ai 平台的外部开发者 API 集成指南。当用户需
 - 在 [myreels.ai/developer](https://myreels.ai/developer) 开发者中心创建 AccessToken
 - 平台不提供生成结果转存服务，结果 URL 需自行保存
 
+## 安装
+
+推荐使用：
+
+```bash
+npx skills add https://github.com/myreelsai/skills --skill myreels-api -g
+```
+
+如果只想安装到当前项目，可去掉 `-g`。
+
 ## 认证
 
 使用请求头：
@@ -75,7 +85,9 @@ Authorization: Bearer YOUR_ACCESS_TOKEN
 
 ## 返回规则
 
-- 先看 HTTP Status，非 `2xx` 视为接口失败
+- Worker 会优先使用上游返回的 `code` 作为最终 HTTP Status
+- 如果上游没有返回 `code`，则回退为上游原始 HTTP Status
+- 先看最终 HTTP Status，非 `2xx` 视为接口失败
 - HTTP Status 为 `2xx` 时，再看响应体中的 `status`
 - 查询任务时，`status = ok` 后再看 `data.status`
 - 当前公开入口仅包括：

@@ -1,30 +1,12 @@
 # 代码示例
 
-## npm 包（推荐）
+## Skill 安装（推荐）
 
 ```bash
-npm install @myreels/skills
+npx skills add https://github.com/myreelsai/skills --skill myreels-api -g
 ```
 
-```typescript
-import { MyReelsSkills } from '@myreels/skills';
-
-const client = new MyReelsSkills({
-  accessToken: 'YOUR_ACCESS_TOKEN',
-});
-
-// 提交任务并等待完成
-const result = await client.runTask({
-  modelName: 'nano-banana2',
-  taskType: 'image',
-  title: 'My first task',
-  input: {
-    prompt: 'A cinematic portrait with soft studio lighting',
-  },
-});
-
-console.log(result.result?.resultUrls);
-```
+如果只想安装到当前项目，可去掉 `-g`。
 
 ## JavaScript / TypeScript（直接调用）
 

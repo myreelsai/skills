@@ -28,6 +28,8 @@
 
 当前应按以下顺序判断：
 
+- Worker 会优先使用上游返回的 `code` 作为最终 HTTP Status
+- 如果上游没有 `code`，则回退为上游原始 HTTP Status
 - 先看 HTTP Status，非 `2xx` 视为接口异常
 - HTTP Status 为 `2xx` 时，再看响应体 `status`
 - `status === "ok"`：接口成功
