@@ -56,6 +56,12 @@ npx skills add https://github.com/myreelsai/skills --skill myreels-api -g
 
 如果只想安装到当前项目，可去掉 `-g`。
 
+也可以通过 ClawHub 安装：
+
+```bash
+npx clawhub install myreels-api
+```
+
 ### 支持的能力
 
 当前文档覆盖以下类型：
@@ -156,6 +162,12 @@ npx skills add https://github.com/myreelsai/skills --skill myreels-api -g
 
 現在のプロジェクトのみに入れたい場合は `-g` を外します。
 
+ClawHub からインストールする場合：
+
+```bash
+npx clawhub install myreels-api
+```
+
 ### 対応している機能
 
 現在のドキュメントでは、以下の生成タイプを扱っています。
@@ -255,6 +267,12 @@ npx skills add https://github.com/myreelsai/skills --skill myreels-api -g
 ```
 
 Remove `-g` if you only want a project-level install.
+
+You can also install from ClawHub:
+
+```bash
+npx clawhub install myreels-api
+```
 
 ### Supported Capabilities
 
