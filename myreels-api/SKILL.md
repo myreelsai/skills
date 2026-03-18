@@ -1,6 +1,6 @@
 ---
 name: myreels-api
-description: MyReels.ai 平台的外部开发者 API 集成指南。当用户需要调用 myreels.ai API 进行 AI 图像/视频/语音/音乐生成时触发。包含认证方式、任务提交与查询流程、模型列表与参数、多语言代码示例（JavaScript/Python/cURL）和错误处理。
+description: MyReels.ai 平台的外部开发者 API 集成指南。当用户需要调用 myreels.ai API 进行 AI 图像/视频/语音/音乐生成或图像编辑时触发。包含认证方式、任务提交与查询流程、模型列表与参数、多语言代码示例（JavaScript/Python/cURL）和错误处理。
 ---
 
 # MyReels API 集成指南
@@ -41,7 +41,7 @@ Content-Type: application/json
 Authorization: Bearer YOUR_ACCESS_TOKEN
 ```
 
-`:modelName` 为模型的 `modelName`，不是 slug，例如 `nano-banana2`、`veo3.1-pro`。
+`:modelName` 为模型的 `modelName`，不是 slug，例如 `nano-banana2`、`veo3.1-pro`、`music-2.5`。
 
 请求体：
 ```json
@@ -99,9 +99,9 @@ Authorization: Bearer YOUR_ACCESS_TOKEN
 
 | 类别 | 标签 | 说明 |
 |------|------|------|
-| 图像 | t2i / i2i | 文生图、图生图 |
-| 视频 | t2v | 文生视频 |
-| 语音 | t2a | 文本转语音 |
+| 图像与编辑 | t2i / i2i / i2e | 文生图、图生图、图像编辑 |
+| 视频 | t2v / i2v | 文生视频、图生视频、数字人驱动 |
+| 音频与音乐 | t2a / m2a | 文本转语音、音乐生成 |
 
 具体模型 `modelName`、输入参数、费用见 [references/models.md](references/models.md)
 
