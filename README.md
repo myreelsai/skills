@@ -61,8 +61,7 @@ This endpoint was verified on March 18, 2026 and currently does not require `Aut
 
 Point display rule:
 
-- use `ceil(estimatedPrice * 100)`
-- example: `0.0872` -> `9 points`
+- use `estimatedCost` as the user-facing points field
 
 ### Recommended Usage Flow
 
@@ -143,8 +142,7 @@ npx clawhub install myreels-api
 
 ポイント表示ルール:
 
-- `ceil(estimatedPrice * 100)` を使用
-- 例: `0.0872` -> `9 points`
+- ユーザー向け points 表示には `estimatedCost` を使用
 
 ### 推奨フロー
 

@@ -5,10 +5,6 @@ description: Practical integration guide for the MyReels API. Use the live `GET 
 
 # MyReels API Integration Guide
 
-[English](#english) | [日本語](#日本語)
-
-## English
-
 ### Prerequisites
 
 - An active subscription is required for generation and task query endpoints.
@@ -48,8 +44,7 @@ Prioritize these fields:
 - `name`
 - `tags`
 - `description`
-- `serviceConfig.estimatedPrice`
-- computed display points: `ceil(serviceConfig.estimatedPrice * 100)`
+- `estimatedCost`
 - `displayConfig.estimatedTime`
 - `userInputSchema`
 - `userInputSchema.<param>.label`
@@ -57,10 +52,9 @@ Prioritize these fields:
 - `userInputSchema.<param>.default`
 - `userInputSchema.<param>.options`
 
-Display cost as points instead of dollars:
+Display cost as points:
 
-- formula: `ceil(estimatedPrice * 100)`
-- example: `0.0872` -> `9 points`
+- use `estimatedCost` as the display points field
 
 For natural-language requests such as "stronger motion", "disable prompt extension", or "higher human fidelity", map user intent from `label` and `description`, not from field names alone.
 
@@ -154,158 +148,6 @@ Public paths:
 Use the live schema described in [references/models.md](references/models.md) for current models, parameters, defaults, options, and field descriptions.
 
 ### References
-
-- [references/models.md](references/models.md)
-- [references/code-examples.md](references/code-examples.md)
-- [references/errors.md](references/errors.md)
-
-## 日本語
-
-### 前提条件
-
-- 生成およびタスク照会エンドポイントには有効なサブスクリプションが必要です。
-- [myreels.ai/developer](https://myreels.ai/developer) で AccessToken を作成してください。
-- 結果 URL は恒久保存されません。自分側で保存してください。
-- `GET https://api.myreels.ai/api/v1/models/api` は 2026-03-18 時点で `Authorization` なしでも取得できることを確認しています。
-
-### インストール
-
-```bash
-npx skills add https://github.com/myreelsai/skills --skill myreels-api -g
-```
-
-プロジェクト単位の場合は `-g` を外してください。
-
-### 認証
-
-次のヘッダーを使用します。
-
-```http
-Authorization: Bearer YOUR_ACCESS_TOKEN
-```
-
-### 推奨フロー
-
-#### 0. 先に最新のモデル情報を取得する
-
-ユーザーの意図をどのパラメータに割り当てるか判断する前に、次を呼び出してください。
-
-```http
-GET https://api.myreels.ai/api/v1/models/api
-```
-
-特に重視すべきフィールド:
-
-- `modelName`
-- `name`
-- `tags`
-- `description`
-- `serviceConfig.estimatedPrice`
-- 表示用ポイント: `ceil(serviceConfig.estimatedPrice * 100)`
-- `displayConfig.estimatedTime`
-- `userInputSchema`
-- `userInputSchema.<param>.label`
-- `userInputSchema.<param>.description`
-- `userInputSchema.<param>.default`
-- `userInputSchema.<param>.options`
-
-コストはドルではなくポイント表示にしてください。
-
-- ルール: `ceil(estimatedPrice * 100)`
-- 例: `0.0872` -> `9 points`
-
-「動きをもっと大きく」「prompt extension を無効にしたい」「人物 fidelity を上げたい」といった自然言語要求は、フィールド名だけでなく `label` と `description` を読んで対応付けてください。
-
-#### 1. タスク送信
-
-```http
-POST https://api.myreels.ai/generation/:modelName
-Content-Type: application/json
-Authorization: Bearer YOUR_ACCESS_TOKEN
-```
-
-`:modelName` には slug ではなく実際の `modelName` を使います。
-
-例:
-
-```json
-{
-  "prompt": "A cinematic portrait with soft studio lighting"
-}
-```
-
-成功レスポンス例:
-
-```json
-{
-  "status": "ok",
-  "message": "Successfully created task",
-  "data": { "taskID": "task_xxx" }
-}
-```
-
-#### 2. タスク状態照会
-
-```http
-GET https://api.myreels.ai/query/task/:taskID
-Authorization: Bearer YOUR_ACCESS_TOKEN
-```
-
-完了時レスポンス例:
-
-```json
-{
-  "status": "ok",
-  "message": "Successfully obtained task info",
-  "data": {
-    "status": "completed",
-    "progress": 100,
-    "resultUrls": [{ "url": "https://cdn.example.com/result.png" }]
-  }
-}
-```
-
-タスク状態:
-
-- `pending`
-- `processing`
-- `completed`
-- `failed`
-
-推奨ポーリング間隔:
-
-- 画像生成 / 画像編集: 10 秒
-- 動画生成: 30 秒から 1 分
-
-照会レート制限:
-
-- 1 分あたり 60 回
-
-### レスポンス判定ルール
-
-- 上流レスポンスに `code` があれば、それが最終 HTTP ステータスになります。
-- 上流に `code` がなければ、上流 HTTP ステータスを使います。
-- まず最終 HTTP ステータスを確認してください。
-- HTTP ステータスが `2xx` の場合に `status` を確認してください。
-- タスク照会では `status === "ok"` の後に `data.status` を確認してください。
-
-公開パス:
-
-- `POST /generation/:modelName`
-- `GET /query/task/:taskID`
-- `GET|POST /api/v1/*`
-
-### モデルカテゴリ
-
-| Category | Tags | Description |
-|------|------|------|
-| Image and editing | `t2i` / `i2i` / `i2e` | text-to-image, image-to-image, image editing |
-| Video | `t2v` / `i2v` | text-to-video, image-to-video, avatar/video motion |
-| Speech and music | `t2a` / `m2a` | text-to-speech, music generation |
-
-最新のモデル、パラメータ、デフォルト値、選択肢、フィールド説明は [references/models.md](references/models.md) にあるライブスキーマの説明を優先してください。
-
-### 参照
 
 - [references/models.md](references/models.md)
 - [references/code-examples.md](references/code-examples.md)
