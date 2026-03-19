@@ -1,20 +1,83 @@
-# 代码示例
+# Code Examples
 
-## Skill 安装（推荐）
+[English](#english) | [日本語](#日本語)
+
+## English
+
+### Install The Skill
 
 ```bash
 npx skills add https://github.com/myreelsai/skills --skill myreels-api -g
 ```
 
-如果只想安装到当前项目，可去掉 `-g`。
+Remove `-g` for a project-level install.
 
-## JavaScript / TypeScript（直接调用）
+### Load Live Model Metadata
+
+`GET https://api.myreels.ai/api/v1/models/api` was verified on March 18, 2026 and currently does not require `Authorization`.
+
+#### JavaScript / TypeScript
+
+```typescript
+const res = await fetch('https://api.myreels.ai/api/v1/models/api');
+if (!res.ok) throw new Error(`Load models failed: HTTP ${res.status}`);
+
+const payload = await res.json();
+const items = payload?.data?.items ?? [];
+
+for (const item of items) {
+  console.log(item.modelName, item.tags);
+  const displayPoints = Math.ceil(Number(item.serviceConfig?.estimatedPrice ?? 0) * 100);
+  console.log('displayPoints', displayPoints);
+  for (const [key, field] of Object.entries(item.userInputSchema ?? {})) {
+    console.log(
+      key,
+      field.type,
+      field.required,
+      field.default ?? field.defaultValue,
+      field.description
+    );
+  }
+}
+```
+
+Display cost rule:
+
+- `displayPoints = ceil(estimatedPrice * 100)`
+- example: `0.0872` -> `9 points`
+
+#### Python
+
+```python
+import math
+import requests
+
+r = requests.get("https://api.myreels.ai/api/v1/models/api")
+r.raise_for_status()
+payload = r.json()
+
+for item in payload.get("data", {}).get("items", []):
+    print(item.get("modelName"), item.get("tags"))
+    price = float(item.get("serviceConfig", {}).get("estimatedPrice") or 0)
+    print("displayPoints", math.ceil(price * 100))
+    for key, field in (item.get("userInputSchema") or {}).items():
+        print(
+            key,
+            field.get("type"),
+            field.get("required"),
+            field.get("default", field.get("defaultValue")),
+            field.get("description"),
+        )
+```
+
+### Submit And Poll A Task
+
+#### JavaScript / TypeScript
 
 ```typescript
 const TOKEN = 'YOUR_ACCESS_TOKEN';
-const MODEL = 'nano-banana2'; // 在开发者中心查看模型 modelName
+const MODEL = 'nano-banana2';
 
-// 1. 提交任务
 const submitRes = await fetch(`https://api.myreels.ai/generation/${MODEL}`, {
   method: 'POST',
   headers: {
@@ -25,10 +88,10 @@ const submitRes = await fetch(`https://api.myreels.ai/generation/${MODEL}`, {
     prompt: 'A cinematic portrait with soft studio lighting',
   }),
 });
+
 const { data: { taskID } } = await submitRes.json();
 
-// 2. 轮询任务状态（建议间隔 3-5 秒）
-async function pollTask(taskID: string) {
+async function pollTask(taskID: string, intervalMs = 10_000) {
   while (true) {
     const res = await fetch(`https://api.myreels.ai/query/task/${taskID}`, {
       method: 'GET',
@@ -36,33 +99,37 @@ async function pollTask(taskID: string) {
         Authorization: `Bearer ${TOKEN}`,
       },
     });
+
     const payload = await res.json();
-    if (!res.ok) {
-      throw new Error(payload.message || `Query failed: HTTP ${res.status}`);
-    }
-    if (payload.status !== 'ok') {
-      throw new Error(payload.message || 'Query failed');
-    }
+    if (!res.ok) throw new Error(payload.message || `Query failed: HTTP ${res.status}`);
+    if (payload.status !== 'ok') throw new Error(payload.message || 'Query failed');
+
     const { data } = payload;
     if (data.status === 'completed') return data;
     if (data.status === 'failed') throw new Error('Task failed');
-    await new Promise(r => setTimeout(r, 3000));
+
+    await new Promise(r => setTimeout(r, intervalMs));
   }
 }
 
-const result = await pollTask(taskID);
+const result = await pollTask(taskID, 10_000);
 console.log(result.resultUrls);
 ```
 
-## Python
+Polling guidance:
+
+- image generation / image editing: 10 seconds
+- video generation: 30 seconds to 1 minute
+
+#### Python
 
 ```python
-import requests, time
+import requests
+import time
 
 TOKEN = "YOUR_ACCESS_TOKEN"
-MODEL = "nano-banana2"  # 在开发者中心查看模型 modelName
+MODEL = "nano-banana2"
 
-# 1. 提交任务
 resp = requests.post(
     f"https://api.myreels.ai/generation/{MODEL}",
     headers={"Authorization": f"Bearer {TOKEN}"},
@@ -70,7 +137,6 @@ resp = requests.post(
 )
 task_id = resp.json()["data"]["taskID"]
 
-# 2. 轮询任务状态
 while True:
     r = requests.get(
         f"https://api.myreels.ai/query/task/{task_id}",
@@ -81,32 +147,205 @@ while True:
         raise Exception(payload.get("message") or f"Query failed: HTTP {r.status_code}")
     if payload.get("status") != "ok":
         raise Exception(payload.get("message") or "Query failed")
+
     data = payload.get("data", {})
     if data.get("status") == "completed":
         print(data["resultUrls"])
         break
-    elif data.get("status") == "failed":
+    if data.get("status") == "failed":
         raise Exception("Task failed")
-    time.sleep(3)
+
+    time.sleep(10)
 ```
 
-## cURL
+#### cURL
 
 ```bash
-# 1. 提交任务
 curl -X POST "https://api.myreels.ai/generation/nano-banana2" \
   -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{"prompt": "A cinematic portrait"}'
 
-# 2. 查询任务状态
 curl -X GET "https://api.myreels.ai/query/task/TASK_ID" \
   -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
 ```
 
-## 环境变量配置
+### Environment Variable Example
 
 ```bash
-# .env
+MYREELS_ACCESS_TOKEN=your_access_token_here
+```
+
+## 日本語
+
+### Skill のインストール
+
+```bash
+npx skills add https://github.com/myreelsai/skills --skill myreels-api -g
+```
+
+プロジェクト単位で使う場合は `-g` を外してください。
+
+### ライブモデル情報の取得
+
+`GET https://api.myreels.ai/api/v1/models/api` は 2026-03-18 時点で `Authorization` なしでも取得できることを確認しています。
+
+#### JavaScript / TypeScript
+
+```typescript
+const res = await fetch('https://api.myreels.ai/api/v1/models/api');
+if (!res.ok) throw new Error(`Load models failed: HTTP ${res.status}`);
+
+const payload = await res.json();
+const items = payload?.data?.items ?? [];
+
+for (const item of items) {
+  console.log(item.modelName, item.tags);
+  const displayPoints = Math.ceil(Number(item.serviceConfig?.estimatedPrice ?? 0) * 100);
+  console.log('displayPoints', displayPoints);
+  for (const [key, field] of Object.entries(item.userInputSchema ?? {})) {
+    console.log(
+      key,
+      field.type,
+      field.required,
+      field.default ?? field.defaultValue,
+      field.description
+    );
+  }
+}
+```
+
+表示コストのルール:
+
+- `displayPoints = ceil(estimatedPrice * 100)`
+- 例: `0.0872` -> `9 points`
+
+#### Python
+
+```python
+import math
+import requests
+
+r = requests.get("https://api.myreels.ai/api/v1/models/api")
+r.raise_for_status()
+payload = r.json()
+
+for item in payload.get("data", {}).get("items", []):
+    print(item.get("modelName"), item.get("tags"))
+    price = float(item.get("serviceConfig", {}).get("estimatedPrice") or 0)
+    print("displayPoints", math.ceil(price * 100))
+    for key, field in (item.get("userInputSchema") or {}).items():
+        print(
+            key,
+            field.get("type"),
+            field.get("required"),
+            field.get("default", field.get("defaultValue")),
+            field.get("description"),
+        )
+```
+
+### タスク送信とポーリング
+
+#### JavaScript / TypeScript
+
+```typescript
+const TOKEN = 'YOUR_ACCESS_TOKEN';
+const MODEL = 'nano-banana2';
+
+const submitRes = await fetch(`https://api.myreels.ai/generation/${MODEL}`, {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    Authorization: `Bearer ${TOKEN}`,
+  },
+  body: JSON.stringify({
+    prompt: 'A cinematic portrait with soft studio lighting',
+  }),
+});
+
+const { data: { taskID } } = await submitRes.json();
+
+async function pollTask(taskID: string, intervalMs = 10_000) {
+  while (true) {
+    const res = await fetch(`https://api.myreels.ai/query/task/${taskID}`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${TOKEN}`,
+      },
+    });
+
+    const payload = await res.json();
+    if (!res.ok) throw new Error(payload.message || `Query failed: HTTP ${res.status}`);
+    if (payload.status !== 'ok') throw new Error(payload.message || 'Query failed');
+
+    const { data } = payload;
+    if (data.status === 'completed') return data;
+    if (data.status === 'failed') throw new Error('Task failed');
+
+    await new Promise(r => setTimeout(r, intervalMs));
+  }
+}
+
+const result = await pollTask(taskID, 10_000);
+console.log(result.resultUrls);
+```
+
+ポーリングの目安:
+
+- 画像生成 / 画像編集: 10 秒
+- 動画生成: 30 秒から 1 分
+
+#### Python
+
+```python
+import requests
+import time
+
+TOKEN = "YOUR_ACCESS_TOKEN"
+MODEL = "nano-banana2"
+
+resp = requests.post(
+    f"https://api.myreels.ai/generation/{MODEL}",
+    headers={"Authorization": f"Bearer {TOKEN}"},
+    json={"prompt": "A cinematic portrait"},
+)
+task_id = resp.json()["data"]["taskID"]
+
+while True:
+    r = requests.get(
+        f"https://api.myreels.ai/query/task/{task_id}",
+        headers={"Authorization": f"Bearer {TOKEN}"},
+    )
+    payload = r.json()
+    if not r.ok:
+        raise Exception(payload.get("message") or f"Query failed: HTTP {r.status_code}")
+    if payload.get("status") != "ok":
+        raise Exception(payload.get("message") or "Query failed")
+
+    data = payload.get("data", {})
+    if data.get("status") == "completed":
+        print(data["resultUrls"])
+        break
+    if data.get("status") == "failed":
+        raise Exception("Task failed")
+
+    time.sleep(10)
+```
+
+#### cURL
+
+```bash
+curl -X POST "https://api.myreels.ai/generation/nano-banana2" \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"prompt": "A cinematic portrait"}'
+
+curl -X GET "https://api.myreels.ai/query/task/TASK_ID" \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
+```
+
+### 環境変数例
+
+```bash
 MYREELS_ACCESS_TOKEN=your_access_token_here
 ```

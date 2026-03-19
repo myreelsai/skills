@@ -1,244 +1,25 @@
 # MyReels Skills
 
-[中文](#中文) | [日本語](#日本語) | [English](#english)
-
-## 中文
-
-这个仓库提供面向 `myreels.ai` 用户的 skills，目的是让你在支持 skill 的 AI agent 中，更方便地使用 MyReels 的生成能力。
-
-如果你希望通过 AI 助手或自动化流程调用 MyReels API，这个仓库里的 skill 可以帮助你更快完成接入。
-
-### 它能帮你做什么
-
-当前仓库提供的 `myreels-api` skill 可以帮助你：
-
-- 调用 MyReels 的图像、视频、语音、音乐生成接口
-- 了解任务提交和结果查询的标准流程
-- 查阅常用模型和输入参数
-- 直接参考 JavaScript、TypeScript、Python、cURL 示例
-- 处理常见错误和限流场景
-
-### 适合谁使用
-
-这个仓库适合以下用户：
-
-- 已经在使用 `myreels.ai`
-- 想把 MyReels 接入自己的 AI agent、脚本或工作流
-- 需要快速查 API 用法，而不是从零摸索
-
-### 当前包含的 Skill
-
-#### `myreels-api`
-
-这是一个 MyReels API 使用指南型 skill，主要覆盖：
-
-- 认证方式
-- 提交生成任务
-- 查询任务状态
-- 获取生成结果
-- 模型参数说明
-- 错误处理建议
-
-相关文档：
-
-- [myreels-api/SKILL.md](./myreels-api/SKILL.md)
-- [myreels-api/references/models.md](./myreels-api/references/models.md)
-- [myreels-api/references/code-examples.md](./myreels-api/references/code-examples.md)
-- [myreels-api/references/errors.md](./myreels-api/references/errors.md)
-
-### 安装
-
-推荐使用 `npx skills add` 安装：
-
-```bash
-npx skills add https://github.com/myreelsai/skills --skill myreels-api -g
-```
-
-如果只想安装到当前项目，可去掉 `-g`。
-
-也可以通过 ClawHub 安装：
-
-```bash
-npx clawhub install myreels-api
-```
-
-### 支持的能力
-
-当前文档覆盖以下类型（已按 2026-03-18 的模型接口同步）：
-
-- 图像生成与编辑：`t2i` / `i2i` / `i2e`
-- 视频生成：`t2v` / `i2v`
-- 语音与音乐生成：`t2a` / `m2a`
-
-当前可用 `modelName`：
-
-- 图像：`nano-banana2` `nano-banana-pro` `sora-image` `gpt-image-1.5` `doubao-seedream-5-0-260128` `kling-image-create` `kling-omni-image` `kling-multi-image-create` `imagen-4` `wan2.6-image` `wan2.6-t2i` `qwen-image-edit-plus`
-- 视频：`myreels-infinite-avatar` `doubao-seedance-1-5-pro-251215` `kling-image-to-video` `kling-omni-video` `grok-video-3` `kling-text-to-video` `veo3.1-pro` `MiniMax-Hailuo-2.3` `wan2.6-r2v` `wan2.6-t2v` `wan2.6-i2v` `gen4_turbo`
-- 音频：`music-2.5` `chirp-v4` `qwen3-tts-instruct-flash`
-
-### 如何使用
-
-使用前，你需要：
-
-- 拥有有效的 MyReels 订阅
-- 在 `myreels.ai` 开发者中心创建 AccessToken
-
-基本流程：
-
-1. 选择一个可用模型。
-2. 调用提交任务接口 `POST /generation/:modelName`。
-3. 记录返回的 `taskID`。
-4. 调用查询接口 `GET /query/task/:taskID` 轮询状态。
-5. 在任务完成后获取结果资源地址。
-
-详细示例见：
-
-- [myreels-api/references/code-examples.md](./myreels-api/references/code-examples.md)
-
-### 隐私与安全
-
-为避免泄露敏感信息，请注意：
-
-- 不要在公开仓库、Issue、截图或聊天记录中暴露你的 AccessToken
-- AccessToken 只应保存在你自己的安全环境中
-- 生成结果链接请自行保存和管理
-
-## 日本語
-
-このリポジトリは、`myreels.ai` のユーザー向けに skills を提供するものです。skill をサポートする AI agent 上で、MyReels の生成機能をより簡単に使えるようにすることを目的としています。
-
-AI アシスタントや自動化フローから MyReels API を利用したい場合、このリポジトリの skill を使うことで導入をより早く進められます。
-
-### できること
-
-現在提供している `myreels-api` skill では、次のことができます。
-
-- MyReels の画像、動画、音声、音楽生成 API を利用する
-- タスク送信と結果確認の基本フローを理解する
-- よく使うモデルと入力パラメータを確認する
-- JavaScript、TypeScript、Python、cURL のサンプルを参照する
-- よくあるエラーやレート制限への対応方法を確認する
-
-### 対象ユーザー
-
-このリポジトリは次のようなユーザーに向いています。
-
-- すでに `myreels.ai` を利用している方
-- MyReels を自分の AI agent、スクリプト、ワークフローに組み込みたい方
-- API の使い方を素早く確認したい方
-
-### 含まれている Skill
-
-#### `myreels-api`
-
-この skill は MyReels API の利用ガイドで、主に次の内容を含みます。
-
-- 認証方法
-- 生成タスクの送信
-- タスク状態の確認
-- 生成結果の取得
-- モデルパラメータの説明
-- エラーハンドリングの指針
-
-関連ドキュメント：
-
-- [myreels-api/SKILL.md](./myreels-api/SKILL.md)
-- [myreels-api/references/models.md](./myreels-api/references/models.md)
-- [myreels-api/references/code-examples.md](./myreels-api/references/code-examples.md)
-- [myreels-api/references/errors.md](./myreels-api/references/errors.md)
-
-### インストール
-
-`npx skills add` でのインストールを推奨します。
-
-```bash
-npx skills add https://github.com/myreelsai/skills --skill myreels-api -g
-```
-
-現在のプロジェクトのみに入れたい場合は `-g` を外します。
-
-ClawHub からインストールする場合：
-
-```bash
-npx clawhub install myreels-api
-```
-
-### 対応している機能
-
-現在のドキュメントでは、以下の生成タイプを扱っています（2026-03-18 の models API に同期済み）。
-
-- 画像生成・編集: `t2i` / `i2i` / `i2e`
-- 動画生成: `t2v` / `i2v`
-- 音声・音楽生成: `t2a` / `m2a`
-
-現在利用できる `modelName`：
-
-- 画像: `nano-banana2` `nano-banana-pro` `sora-image` `gpt-image-1.5` `doubao-seedream-5-0-260128` `kling-image-create` `kling-omni-image` `kling-multi-image-create` `imagen-4` `wan2.6-image` `wan2.6-t2i` `qwen-image-edit-plus`
-- 動画: `myreels-infinite-avatar` `doubao-seedance-1-5-pro-251215` `kling-image-to-video` `kling-omni-video` `grok-video-3` `kling-text-to-video` `veo3.1-pro` `MiniMax-Hailuo-2.3` `wan2.6-r2v` `wan2.6-t2v` `wan2.6-i2v` `gen4_turbo`
-- 音声/音楽: `music-2.5` `chirp-v4` `qwen3-tts-instruct-flash`
-
-### 使い方
-
-利用前に必要なもの：
-
-- 有効な MyReels サブスクリプション
-- `myreels.ai` 開発者センターで作成した AccessToken
-
-基本的な流れ：
-
-1. 利用するモデルを選択します。
-2. `POST /generation/:modelName` でタスクを送信します。
-3. 返却された `taskID` を保存します。
-4. `GET /query/task/:taskID` で状態をポーリングします。
-5. 完了後に生成結果の URL を取得します。
-
-サンプルコード：
-
-- [myreels-api/references/code-examples.md](./myreels-api/references/code-examples.md)
-
-### プライバシーと安全性
-
-機密情報を漏らさないため、次の点に注意してください。
-
-- 公開リポジトリ、Issue、スクリーンショット、チャット履歴に AccessToken を載せない
-- AccessToken は自分の安全な環境だけで保管する
-- 生成結果のリンクは自分で保存、管理する
+[English](#english) | [日本語](#日本語)
 
 ## English
 
-This repository provides skills for `myreels.ai` users so they can use MyReels generation capabilities more easily inside AI agents that support skills.
+This repository provides public skills for `myreels.ai` users who want to use MyReels generation capabilities inside AI agents that support skills.
 
-If you want to call the MyReels API from an AI assistant or an automated workflow, the skills in this repository help you get started faster.
+### What This Repository Includes
 
-### What It Helps With
-
-The current `myreels-api` skill helps you:
-
-- call MyReels image, video, and audio generation APIs
-- understand the standard flow for submitting tasks and checking results
-- look up common models and input parameters
-- reuse JavaScript, TypeScript, Python, and cURL examples
-- handle common errors and rate limit cases
-
-### Who This Is For
-
-This repository is useful if you:
-
-- already use `myreels.ai`
-- want to connect MyReels to your AI agent, scripts, or workflows
-- need a faster way to understand the API
-
-### Included Skill
+The current public skill is:
 
 #### `myreels-api`
 
-This skill is a practical usage guide for the MyReels API. It covers:
+This skill is a practical integration guide for the MyReels API. It covers:
 
 - authentication
-- submitting generation tasks
-- checking task status
-- retrieving generated results
-- model parameter references
+- model discovery
+- task submission
+- task status polling
+- result retrieval
+- parameter references
 - error handling guidance
 
 Related documents:
@@ -250,15 +31,15 @@ Related documents:
 
 ### Installation
 
-Recommended installation via `npx skills add`:
+Install from GitHub:
 
 ```bash
 npx skills add https://github.com/myreelsai/skills --skill myreels-api -g
 ```
 
-Remove `-g` if you only want a project-level install.
+Remove `-g` for a project-level install.
 
-You can also install from ClawHub:
+Install from ClawHub:
 
 ```bash
 npx clawhub install myreels-api
@@ -266,41 +47,121 @@ npx clawhub install myreels-api
 
 ### Supported Capabilities
 
-The current documentation covers the following types and is synced to the 2026-03-18 models API result:
+The skill currently covers:
 
 - image generation and editing: `t2i` / `i2i` / `i2e`
 - video generation: `t2v` / `i2v`
 - speech and music generation: `t2a` / `m2a`
 
-Current `modelName` values:
+For the latest `modelName` list, parameter schema, defaults, options, and field descriptions, use:
 
-- image: `nano-banana2` `nano-banana-pro` `sora-image` `gpt-image-1.5` `doubao-seedream-5-0-260128` `kling-image-create` `kling-omni-image` `kling-multi-image-create` `imagen-4` `wan2.6-image` `wan2.6-t2i` `qwen-image-edit-plus`
-- video: `myreels-infinite-avatar` `doubao-seedance-1-5-pro-251215` `kling-image-to-video` `kling-omni-video` `grok-video-3` `kling-text-to-video` `veo3.1-pro` `MiniMax-Hailuo-2.3` `wan2.6-r2v` `wan2.6-t2v` `wan2.6-i2v` `gen4_turbo`
-- audio: `music-2.5` `chirp-v4` `qwen3-tts-instruct-flash`
+- `GET https://api.myreels.ai/api/v1/models/api`
 
-### How To Use
+This endpoint was verified on March 18, 2026 and currently does not require `Authorization`.
 
-Before using the API, you need:
+Point display rule:
 
-- an active MyReels subscription
-- an AccessToken created in the `myreels.ai` developer center
+- use `ceil(estimatedPrice * 100)`
+- example: `0.0872` -> `9 points`
 
-Basic flow:
+### Recommended Usage Flow
 
-1. Choose a model.
-2. Submit a task with `POST /generation/:modelName`.
-3. Save the returned `taskID`.
-4. Poll `GET /query/task/:taskID` for status updates.
-5. Retrieve the result URL after completion.
+1. Call `GET https://api.myreels.ai/api/v1/models/api` to load the live model schema.
+2. Choose a model by `modelName`, tags, and parameter definitions.
+3. Submit a task with `POST /generation/:modelName`.
+4. Save the returned `taskID`.
+5. Poll `GET /query/task/:taskID`.
+6. Read the final result URLs after completion.
 
-Code examples:
+Recommended polling intervals:
 
+- image generation / image editing: 10 seconds
+- video generation: 30 seconds to 1 minute
+
+### Security Notes
+
+- Do not expose your AccessToken in public repositories, screenshots, or chat logs.
+- Store your AccessToken only in your own secure environment.
+- Save and manage result URLs on your side.
+
+## 日本語
+
+このリポジトリは、`myreels.ai` のユーザー向けに公開されている skill を提供します。skill に対応した AI agent 内で、MyReels の生成機能を利用しやすくするためのものです。
+
+### 含まれているもの
+
+現在公開されている skill は次のとおりです。
+
+#### `myreels-api`
+
+この skill は MyReels API の実践的な統合ガイドです。主に次の内容を含みます。
+
+- 認証
+- モデル取得
+- タスク送信
+- タスク状態のポーリング
+- 結果取得
+- パラメータ参照
+- エラーハンドリング指針
+
+関連ドキュメント:
+
+- [myreels-api/SKILL.md](./myreels-api/SKILL.md)
+- [myreels-api/references/models.md](./myreels-api/references/models.md)
 - [myreels-api/references/code-examples.md](./myreels-api/references/code-examples.md)
+- [myreels-api/references/errors.md](./myreels-api/references/errors.md)
 
-### Privacy And Security
+### インストール
 
-To avoid leaking sensitive information:
+GitHub からインストール:
 
-- do not expose your AccessToken in public repositories, issues, screenshots, or chat logs
-- store your AccessToken only in your own secure environment
-- save and manage generated result links on your side
+```bash
+npx skills add https://github.com/myreelsai/skills --skill myreels-api -g
+```
+
+プロジェクト単位で入れたい場合は `-g` を外してください。
+
+ClawHub からインストール:
+
+```bash
+npx clawhub install myreels-api
+```
+
+### 対応機能
+
+現在の skill は次のタイプを扱います。
+
+- 画像生成・編集: `t2i` / `i2i` / `i2e`
+- 動画生成: `t2v` / `i2v`
+- 音声・音楽生成: `t2a` / `m2a`
+
+最新の `modelName` 一覧、パラメータ定義、デフォルト値、選択肢、フィールド説明は次のエンドポイントを利用してください。
+
+- `GET https://api.myreels.ai/api/v1/models/api`
+
+このエンドポイントは 2026-03-18 時点で `Authorization` なしでも取得できることを確認しています。
+
+ポイント表示ルール:
+
+- `ceil(estimatedPrice * 100)` を使用
+- 例: `0.0872` -> `9 points`
+
+### 推奨フロー
+
+1. `GET https://api.myreels.ai/api/v1/models/api` を呼び出して最新のモデル定義を取得します。
+2. `modelName`、タグ、パラメータ定義を見てモデルを選びます。
+3. `POST /generation/:modelName` でタスクを送信します。
+4. 返却された `taskID` を保存します。
+5. `GET /query/task/:taskID` をポーリングします。
+6. 完了後に結果 URL を読み取ります。
+
+推奨ポーリング間隔:
+
+- 画像生成 / 画像編集: 10 秒
+- 動画生成: 30 秒から 1 分
+
+### セキュリティ注意事項
+
+- AccessToken を公開リポジトリ、スクリーンショット、チャットログに載せないでください。
+- AccessToken は自分の安全な環境だけに保存してください。
+- 結果 URL は自分側で保存・管理してください。
