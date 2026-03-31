@@ -162,6 +162,76 @@ curl -X GET "https://api.myreels.ai/query/task/TASK_ID" \
   -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
 ```
 
+### List User Tasks
+
+For `GET` requests, pass filters as query parameters.
+
+#### JavaScript / TypeScript
+
+```typescript
+const TOKEN = 'YOUR_ACCESS_TOKEN';
+
+const query = new URLSearchParams({
+  page: '1',
+  limit: '10',
+  status: 'completed',
+  startDate: '2026-03-01T00:00:00.000Z',
+});
+
+const res = await fetch(`https://api.myreels.ai/generation/tasks?${query.toString()}`, {
+  method: 'GET',
+  headers: {
+    Authorization: `Bearer ${TOKEN}`,
+  },
+});
+
+const payload = await res.json();
+if (!res.ok) throw new Error(payload.message || `Task list failed: HTTP ${res.status}`);
+if (payload.status !== 'ok') throw new Error(payload.message || 'Task list failed');
+
+for (const item of payload?.data ?? []) {
+  console.log(item.id, item.status);
+}
+```
+
+#### Python
+
+```python
+import requests
+
+TOKEN = "YOUR_ACCESS_TOKEN"
+
+r = requests.get(
+    "https://api.myreels.ai/generation/tasks",
+    headers={"Authorization": f"Bearer {TOKEN}"},
+    params={
+        "page": 1,
+        "limit": 10,
+        "status": "completed",
+        "startDate": "2026-03-01T00:00:00.000Z",
+    },
+)
+payload = r.json()
+if not r.ok:
+    raise Exception(payload.get("message") or f"Task list failed: HTTP {r.status_code}")
+if payload.get("status") != "ok":
+    raise Exception(payload.get("message") or "Task list failed")
+
+for item in payload.get("data", []):
+    print(item.get("id"), item.get("status"))
+```
+
+#### cURL
+
+```bash
+curl -G "https://api.myreels.ai/generation/tasks" \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
+  --data-urlencode "page=1" \
+  --data-urlencode "limit=10" \
+  --data-urlencode "status=completed" \
+  --data-urlencode "startDate=2026-03-01T00:00:00.000Z"
+```
+
 ### Environment Variable Example
 
 ```bash

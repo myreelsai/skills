@@ -1,0 +1,6 @@
+shot_id,scene_code,shot_type,camera_angle,movement,duration,description,visual_prompt,action,dialogue,emotion,sound_fx,notes,difficulty,status
+S01-01,SCENE-01,,,,,,,,,,,,,,pending
+S01-02,SCENE-01,,,,,,,,,,,,,,pending
+S01-03,,,,,,,,,,,,,,,pending
+S01-04,,,,,,,,,,,,,,,pending
+S01-05,SCENE-02,,,,,,,,,,,,,,pending

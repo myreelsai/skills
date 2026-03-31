@@ -24,6 +24,26 @@
 | 429 | Query rate too high |
 | 500 | Server-side processing error |
 
+### Task List Query Status Codes
+
+| Status | Meaning |
+|--------|------|
+| 200 | Query succeeded |
+| 400 | Invalid `page`, `limit`, or `status` value |
+| 401 | Missing Authorization header, or invalid / expired token |
+| 500 | Server-side processing error |
+
+### Task Status Enum
+
+Public task status values:
+
+- `pending`
+- `processing`
+- `completed`
+- `failed`
+- `cancelled`
+- `warning`
+
 ### Response Evaluation Order
 
 - If the upstream response includes `code`, Worker uses it as the final HTTP status.
@@ -74,6 +94,7 @@ if (!res.ok || data.status !== 'ok') throw new Error(data.message || 'Task submi
 Public paths:
 
 - `POST /generation/:modelName`
+- `GET /generation/tasks`
 - `GET /query/task/:taskID`
 - `GET|POST /api/v1/*`
 

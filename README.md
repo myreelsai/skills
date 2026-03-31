@@ -12,15 +12,25 @@ The current public skill is:
 
 #### `myreels-api`
 
-This skill is a practical integration guide for the MyReels API. It covers:
+This skill is an executable API skill for the MyReels public API. It now includes bundled shell scripts plus fallback reference docs. It covers:
 
-- authentication
-- model discovery
+- environment checks
+- live model discovery
 - task submission
+- task list queries
 - task status polling
-- result retrieval
+- result retrieval guidance
+- authentication
 - parameter references
 - error handling guidance
+
+Bundled scripts:
+
+- `myreels-doctor.sh`
+- `myreels-models.sh`
+- `myreels-generate.sh`
+- `myreels-tasks-list.sh`
+- `myreels-task-get.sh`
 
 Related documents:
 
@@ -65,12 +75,13 @@ Point display rule:
 
 ### Recommended Usage Flow
 
-1. Call `GET https://api.myreels.ai/api/v1/models/api` to load the live model schema.
+1. Run `scripts/myreels-models.sh --summary` to load the live model schema.
 2. Choose a model by `modelName`, tags, and parameter definitions.
-3. Submit a task with `POST /generation/:modelName`.
-4. Save the returned `taskID`.
-5. Poll `GET /query/task/:taskID`.
-6. Read the final result URLs after completion.
+3. If you need existing task history, use `scripts/myreels-tasks-list.sh`.
+4. Submit a task with `scripts/myreels-generate.sh`.
+5. Save the returned `taskID`.
+6. Poll with `scripts/myreels-task-get.sh`.
+7. Read and persist the final result URLs after completion.
 
 Recommended polling intervals:
 
@@ -93,15 +104,25 @@ Recommended polling intervals:
 
 #### `myreels-api`
 
-この skill は MyReels API の実践的な統合ガイドです。主に次の内容を含みます。
+この skill は MyReels Public API を実行しやすくするための executable skill です。shell script と参照ドキュメントを同梱しています。主に次の内容を含みます。
 
-- 認証
-- モデル取得
+- 環境チェック
+- ライブモデル取得
 - タスク送信
+- タスクリスト取得
 - タスク状態のポーリング
-- 結果取得
+- 結果取得の指針
+- 認証
 - パラメータ参照
 - エラーハンドリング指針
+
+同梱スクリプト:
+
+- `myreels-doctor.sh`
+- `myreels-models.sh`
+- `myreels-generate.sh`
+- `myreels-tasks-list.sh`
+- `myreels-task-get.sh`
 
 関連ドキュメント:
 
@@ -146,12 +167,13 @@ npx clawhub install myreels-api
 
 ### 推奨フロー
 
-1. `GET https://api.myreels.ai/api/v1/models/api` を呼び出して最新のモデル定義を取得します。
+1. `scripts/myreels-models.sh --summary` を実行して最新のモデル定義を取得します。
 2. `modelName`、タグ、パラメータ定義を見てモデルを選びます。
-3. `POST /generation/:modelName` でタスクを送信します。
-4. 返却された `taskID` を保存します。
-5. `GET /query/task/:taskID` をポーリングします。
-6. 完了後に結果 URL を読み取ります。
+3. 既存タスク履歴が必要なら `scripts/myreels-tasks-list.sh` を使います。
+4. `scripts/myreels-generate.sh` でタスクを送信します。
+5. 返却された `taskID` を保存します。
+6. `scripts/myreels-task-get.sh` をポーリングします。
+7. 完了後に結果 URL を読み取り、自分側でも保存します。
 
 推奨ポーリング間隔:
 
