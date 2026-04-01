@@ -4,7 +4,11 @@
 
 ## Character Image Models (t2i)
 
-Generate character reference images (front/side/back views):
+Generate character reference images as a single-image turnaround sheet (front/side/back views on one canvas):
+
+Preferred default for three-view character sheets:
+- `nano-banana2` should be the first recommendation for base character turnaround generation
+- Use other models as fallback or for style-specific adjustments after the base sheet is approved
 
 | Model | Use Case | Quality |
 |-------|----------|---------|
@@ -74,9 +78,34 @@ Generate video from images or text:
 ### For Character Images
 
 Include in prompt:
+- `one image`
+- `character turnaround sheet` / `character sheet` / `model sheet`
+- `three-view diagram`
 - `front view` / `side view` / `back view`
+- `aligned left to right`
+- `exact same character shown three times`
+- `full body`
 - Character tags from design
 - Clean background for reference
+- `16:9` if you want to help the model fit three views on one sheet
+
+For `nano-banana2`, this practical pattern is worth trying first:
+
+```text
+[SUBJECT], three-view diagram, one image, same character, white background, front view: [front details], side view: [side details], back view: [back details], high quality, 16:9
+```
+
+Notes:
+- Put the layout instruction before `cinematic` or other style-heavy tags
+- Mild stance language can work, but neutral standing pose is safer for approval sheets
+- If the model already returns a correct three-view layout, keep the structure and only refine character details
+
+Avoid:
+- poster composition
+- strong action pose
+- dramatic camera
+- split-scene collage
+- cropped body
 
 ### For Scene Images
 
